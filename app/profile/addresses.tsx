@@ -20,7 +20,7 @@ export default function AddressesScreen() {
   };
   
   const handleEditAddress = (addressId: string) => {
-    router.push(`/address/edit/${addressId}`);
+    router.push(`/address/edit/${addressId}`)
   };
   
   const handleDeleteAddress = (addressId: string) => {

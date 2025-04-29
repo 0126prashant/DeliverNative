@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, Pressable, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 
 interface ButtonProps {
   title: string;
@@ -9,7 +9,7 @@ interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
   disabled?: boolean;
   loading?: boolean;
-  style?: ViewStyle;
+  style?: ViewStyle;  
   textStyle?: TextStyle;
   fullWidth?: boolean;
 }

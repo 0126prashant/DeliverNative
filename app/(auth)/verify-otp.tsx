@@ -10,7 +10,6 @@ export default function VerifyOtpScreen() {
   const { phone } = useLocalSearchParams<{ phone: string }>();
   const router = useRouter();
   const { verifyOtp, isLoading, isAuthenticated } = useUserStore();
-  
   const [otp, setOtp] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);

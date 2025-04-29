@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { MinusCircle, PlusCircle, Trash2 } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { CartItem as CartItemType } from '@/types';
 import { useCartStore } from '@/store/cartStore';
 
