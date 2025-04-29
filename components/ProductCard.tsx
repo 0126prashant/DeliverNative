@@ -31,10 +31,7 @@ export default function ProductCard({ product, horizontal = false }: ProductCard
 
   return (
     <Pressable 
-      style={[
-        styles.container, 
-        horizontal ? styles.horizontalContainer : {}
-      ]} 
+      style={[styles.container, horizontal ? styles.horizontalContainer : {}]} 
       onPress={handlePress}
     >
       <Image
@@ -59,12 +56,12 @@ export default function ProductCard({ product, horizontal = false }: ProductCard
         <View style={styles.actionContainer}>
           {quantity > 0 ? (
             <View style={styles.quantityContainer}>
-              <Pressable onPress={handleRemoveFromCart} hitSlop={8}>
-                <MinusCircle size={24} color={Colors.primary} />
+              <Pressable onPress={handleRemoveFromCart} hitSlop={8} style={styles.quantityButton}>
+                <MinusCircle size={22} color={Colors.primary} />
               </Pressable>
               <Text style={styles.quantity}>{quantity}</Text>
-              <Pressable onPress={handleAddToCart} hitSlop={8}>
-                <PlusCircle size={24} color={Colors.primary} />
+              <Pressable onPress={handleAddToCart} hitSlop={8} style={styles.quantityButton}>
+                <PlusCircle size={22} color={Colors.primary} />
               </Pressable>
             </View>
           ) : (
@@ -84,7 +81,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
     marginBottom: 16,
-    width: '48%',
+    width: '100%',  
+    maxWidth: '48%', 
     shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -94,6 +92,7 @@ const styles = StyleSheet.create({
   horizontalContainer: {
     flexDirection: 'row',
     width: '100%',
+    maxWidth: '100%', 
     height: 120,
   },
   image: {
@@ -114,6 +113,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.text,
     marginBottom: 4,
+    minHeight: 38, 
   },
   weight: {
     fontSize: 12,
@@ -156,6 +156,9 @@ const styles = StyleSheet.create({
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  quantityButton: {
+    padding: 2, 
   },
   quantity: {
     fontSize: 16,

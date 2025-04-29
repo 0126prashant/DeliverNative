@@ -24,12 +24,16 @@ export default function LoginScreen() {
     try {
       await loginWithPhone(phoneNumber);
       router.push({
-        pathname: '/verify-otp',
+        pathname: '/(auth)/verify-otp',
         params: { phone: phoneNumber }
       });
     } catch (error) {
       Alert.alert('Error', 'Failed to send OTP. Please try again.');
     }
+  };
+
+  const navigateToAdminLogin = () => {
+    router.push('/(admin)');
   };
   
   return (
@@ -70,6 +74,10 @@ export default function LoginScreen() {
         <Text style={styles.termsText}>
           By continuing, you agree to our Terms of Service and Privacy Policy
         </Text>
+
+        <Pressable onPress={navigateToAdminLogin} style={styles.adminLoginButton}>
+          <Text style={styles.adminLoginText}>Login as Admin</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -136,5 +144,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.subtext,
     textAlign: 'center',
+  },
+  adminLoginButton: {
+    marginTop: 24,
+    padding: 12,
+    alignItems: 'center',
+  },
+  adminLoginText: {
+    fontSize: 16,
+    color: Colors.primary,
+    fontWeight: '600',
   },
 });
