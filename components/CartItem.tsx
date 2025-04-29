@@ -8,9 +8,10 @@ import { useCartStore } from '@/store/cartStore';
 
 interface CartItemProps {
   item: CartItemType;
+  readonly?: boolean;
 }
 
-export default function CartItem({ item }: CartItemProps) {
+export default function CartItem({ item, readonly = false }: CartItemProps) {
   const { addToCart, removeFromCart, removeItemCompletely } = useCartStore();
   const { product, quantity } = item;
 
@@ -43,21 +44,28 @@ export default function CartItem({ item }: CartItemProps) {
             {product.discountedPrice && (
               <Text style={styles.originalPrice}>₹{product.price}</Text>
             )}
+            {readonly && (
+              <Text style={styles.quantityText}>× {quantity}</Text>
+            )}
           </View>
-          <View style={styles.quantityContainer}>
-            <Pressable onPress={handleRemove} hitSlop={8}>
-              <MinusCircle size={22} color={Colors.primary} />
-            </Pressable>
-            <Text style={styles.quantity}>{quantity}</Text>
-            <Pressable onPress={handleAdd} hitSlop={8}>
-              <PlusCircle size={22} color={Colors.primary} />
-            </Pressable>
-          </View>
+          {!readonly && (
+            <View style={styles.quantityContainer}>
+              <Pressable onPress={handleRemove} hitSlop={8}>
+                <MinusCircle size={22} color={Colors.primary} />
+              </Pressable>
+              <Text style={styles.quantity}>{quantity}</Text>
+              <Pressable onPress={handleAdd} hitSlop={8}>
+                <PlusCircle size={22} color={Colors.primary} />
+              </Pressable>
+            </View>
+          )}
         </View>
       </View>
-      <Pressable style={styles.deleteButton} onPress={handleDelete} hitSlop={8}>
-        <Trash2 size={18} color={Colors.error} />
-      </Pressable>
+      {!readonly && (
+        <Pressable style={styles.deleteButton} onPress={handleDelete} hitSlop={8}>
+          <Trash2 size={18} color={Colors.error} />
+        </Pressable>
+      )}
     </View>
   );
 }
@@ -104,6 +112,7 @@ const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   price: {
     fontSize: 16,
@@ -115,6 +124,11 @@ const styles = StyleSheet.create({
     color: Colors.darkGray,
     textDecorationLine: 'line-through',
     marginLeft: 6,
+  },
+  quantityText: {
+    fontSize: 14,
+    color: Colors.subtext,
+    marginLeft: 10,
   },
   quantityContainer: {
     flexDirection: 'row',

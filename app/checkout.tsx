@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Pressable, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Pressable, Alert, Linking, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MapPin, CreditCard, ChevronRight, Plus } from 'lucide-react-native';
 import Colors from '@/constants/Colors';
@@ -9,6 +9,25 @@ import { useOrderStore } from '@/store/orderStore';
 import CartItem from '@/components/CartItem';
 import AddressCard from '@/components/AddressCard';
 import Button from '@/components/Button';
+
+// List of supported UPI apps
+const UPI_APPS = [
+  {
+    name: 'Google Pay',
+    package: 'com.google.android.apps.nbu.paisa.user',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1024px-Google_Pay_Logo_%282020%29.svg.png'
+  },
+  {
+    name: 'PhonePe',
+    package: 'com.phonepe.app',
+    icon: 'https://download.logo.wine/logo/PhonePe/PhonePe-Logo.wine.png'
+  },
+  {
+    name: 'Paytm',
+    package: 'net.one97.paytm',
+    icon: 'https://logos-world.net/wp-content/uploads/2020/11/Paytm-Symbol.png'
+  },
+];
 
 export default function CheckoutScreen() {
   const router = useRouter();
@@ -20,6 +39,8 @@ export default function CheckoutScreen() {
     user?.addresses.find(addr => addr.isDefault)?.id || user?.addresses[0]?.id || null
   );
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('upi');
+  const [selectedUpiApp, setSelectedUpiApp] = useState<string | null>(null);
+  const [showUpiApps, setShowUpiApps] = useState(false);
   
   const totalAmount = getTotalAmount();
   const deliveryFee = 40;
@@ -42,11 +63,18 @@ export default function CheckoutScreen() {
       [
         {
           text: 'UPI',
-          onPress: () => setSelectedPaymentMethod('upi'),
+          onPress: () => {
+            setSelectedPaymentMethod('upi');
+            setShowUpiApps(true);
+          },
         },
         {
           text: 'Cash on Delivery',
-          onPress: () => setSelectedPaymentMethod('cod'),
+          onPress: () => {
+            setSelectedPaymentMethod('cod');
+            setShowUpiApps(false);
+            setSelectedUpiApp(null);
+          },
         },
         {
           text: 'Cancel',
@@ -55,22 +83,77 @@ export default function CheckoutScreen() {
       ]
     );
   };
+
+  const handleUpiAppSelect = (appName: string) => {
+    setSelectedUpiApp(appName);
+    setShowUpiApps(false);
+  };
+
+  const toggleUpiApps = () => {
+    setShowUpiApps(!showUpiApps);
+  };
   
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
       Alert.alert('Error', 'Please select a delivery address');
       return;
     }
-    
-    try {
-      const order = await placeOrder(items, selectedAddress, selectedPaymentMethod);
-      clearCart();
-      router.push({
-        pathname: '/payment-success',
-        params: { orderId: order.id }
-      });
-    } catch (error) {
-      Alert.alert('Error', 'Failed to place order. Please try again.');
+
+    // For UPI payment, initiate payment flow
+    if (selectedPaymentMethod === 'upi') {
+      if (!selectedUpiApp) {
+        Alert.alert('Select UPI App', 'Please select a UPI app to continue with payment');
+        setShowUpiApps(true);
+        return;
+      }
+
+      try {
+        // Generate a unique merchant transaction ID
+        const txnId = `ORDER${Date.now()}`;
+        const orderId = `ORD${Math.floor(1000 + Math.random() * 9000)}`;
+        const merchantId = 'DELIVERY_APP';
+
+        // Construct UPI URL with transaction details
+        const upiUrl = `upi://pay?pa=example@upi&pn=DeliveryApp&am=${totalPayable}&cu=INR&tn=Order Payment&tr=${txnId}&mc=${merchantId}&tid=${orderId}`;
+        
+        // Log the URL for debugging (in a real app, use proper logging)
+        console.log('UPI Payment URL:', upiUrl);
+
+        // Check if the URL can be opened
+        const canOpen = await Linking.canOpenURL(upiUrl);
+        
+        if (canOpen) {
+          // Place the order first in database
+          const order = await placeOrder(items, selectedAddress, selectedPaymentMethod);
+          
+          // Then open the UPI app
+          await Linking.openURL(upiUrl);
+          
+          // Clear cart and navigate to success
+          clearCart();
+          router.push({
+            pathname: '/payment-success',
+            params: { orderId: order.id }
+          });
+        } else {
+          throw new Error("Can't open UPI app");
+        }
+      } catch (error) {
+        console.error('UPI payment error:', error);
+        Alert.alert('Payment Error', 'Failed to open UPI payment app. Please try another payment method.');
+      }
+    } else {
+      // For Cash on Delivery, proceed as before
+      try {
+        const order = await placeOrder(items, selectedAddress, selectedPaymentMethod);
+        clearCart();
+        router.push({
+          pathname: '/payment-success',
+          params: { orderId: order.id }
+        });
+      } catch (error) {
+        Alert.alert('Error', 'Failed to place order. Please try again.');
+      }
     }
   };
   
@@ -113,22 +196,49 @@ export default function CheckoutScreen() {
               <Text style={styles.paymentMethod}>
                 {selectedPaymentMethod === 'upi' ? 'UPI Payment' : 'Cash on Delivery'}
               </Text>
-              <Text style={styles.paymentDescription}>
-                {selectedPaymentMethod === 'upi' 
-                  ? 'Pay using UPI apps like Google Pay, PhonePe, etc.' 
-                  : 'Pay with cash when your order is delivered'}
-              </Text>
+              {selectedPaymentMethod === 'upi' && (
+                <Text style={styles.paymentDescription}>
+                  {selectedUpiApp ? `Pay using ${selectedUpiApp}` : 'Select a UPI app'}
+                </Text>
+              )}
+              {selectedPaymentMethod === 'cod' && (
+                <Text style={styles.paymentDescription}>
+                  Pay when your order is delivered
+                </Text>
+              )}
             </View>
             <ChevronRight size={20} color={Colors.darkGray} />
           </Pressable>
+
+          {/* UPI Apps Selection */}
+          {showUpiApps && selectedPaymentMethod === 'upi' && (
+            <View style={styles.upiAppsContainer}>
+              <Text style={styles.upiAppsTitle}>Select UPI App</Text>
+              <View style={styles.upiAppsList}>
+                {UPI_APPS.map((app) => (
+                  <Pressable
+                    key={app.name}
+                    style={[
+                      styles.upiAppItem,
+                      selectedUpiApp === app.name && styles.selectedUpiApp
+                    ]}
+                    onPress={() => handleUpiAppSelect(app.name)}
+                  >
+                    <Image source={{ uri: app.icon }} style={styles.upiAppIcon} />
+                    <Text style={styles.upiAppName}>{app.name}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+          )}
         </View>
         
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Order Summary</Text>
+          <Text style={styles.sectionTitle}>Order Items</Text>
           
           <View style={styles.itemsContainer}>
-            {items.map(item => (
-              <CartItem key={item.product.id} item={item} />
+            {items.map((item) => (
+              <CartItem key={item.product.id} item={item} readonly />
             ))}
           </View>
         </View>
@@ -248,6 +358,50 @@ const styles = StyleSheet.create({
   paymentDescription: {
     fontSize: 12,
     color: Colors.subtext,
+  },
+  // UPI app selection styles
+  upiAppsContainer: {
+    marginTop: 16,
+    backgroundColor: Colors.lightGray,
+    borderRadius: 8,
+    padding: 16,
+  },
+  upiAppsTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: Colors.text,
+    marginBottom: 12,
+  },
+  upiAppsList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  upiAppItem: {
+    width: '30%',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.white,
+    marginBottom: 10,
+  },
+  selectedUpiApp: {
+    borderColor: Colors.primary,
+    backgroundColor: `${Colors.primary}10`,
+  },
+  upiAppIcon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+    marginBottom: 8,
+  },
+  upiAppName: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: Colors.text,
   },
   itemsContainer: {
     marginTop: 8,

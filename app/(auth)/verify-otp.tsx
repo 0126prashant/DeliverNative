@@ -18,7 +18,7 @@ export default function VerifyOtpScreen() {
   
   useEffect(() => {
     if (isAuthenticated) {
-      router.replace('/');
+      router.replace('/(tabs)');
     }
   }, [isAuthenticated, router]);
   
@@ -96,6 +96,10 @@ export default function VerifyOtpScreen() {
     try {
       await verifyOtp(otpString);
       // Navigation is handled by the useEffect that watches isAuthenticated
+      // Explicitly navigate to tabs in case useEffect doesn't trigger
+      if (isAuthenticated) {
+        router.replace('/(tabs)');
+      }
     } catch (error) {
       Alert.alert('Error', 'Invalid OTP. Please try again.');
     }

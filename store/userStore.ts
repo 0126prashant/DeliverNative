@@ -30,6 +30,12 @@ export const useUserStore = create<UserState>()(
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
         
+        // Generate a random 4-digit OTP
+        const otp = Math.floor(1000 + Math.random() * 9000).toString();
+        
+        // Console log the OTP for development
+        console.log('OTP sent to', phone, ':', otp);
+        
         // In a real app, you would send an OTP to the phone number here
         // For demo purposes, we'll just set a flag
         set({ isLoading: false });
