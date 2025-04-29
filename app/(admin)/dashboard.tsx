@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, Pressable } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { Package, Truck, Users, LogOut, ChevronRight } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { useAdminStore } from '@/store/adminStore';
 import { useOrderStore } from '@/store/orderStore';
 

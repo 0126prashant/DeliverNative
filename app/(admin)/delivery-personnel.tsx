@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, Pressable, TextInput, Alert } from 'react-native';
 import { Stack } from 'expo-router';
 import { User, Phone, Plus, X, Edit, Trash2 } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { useDeliveryPersonnelStore } from '@/store/deliveryPersonnelStore';
 import Button from '@/components/Button';
 
@@ -183,7 +183,6 @@ export default function DeliveryPersonnelScreen() {
               setIsAvailable(true);
               setShowAddModal(true);
             }}
-            icon={Plus}
             style={styles.emptyButton}
           />
         </View>

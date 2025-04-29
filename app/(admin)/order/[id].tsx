@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, Alert, Pressable } from 'react-native';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { MapPin, Package, User, Phone, Truck } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+
 import { useOrderStore } from '@/store/orderStore';
 import { useDeliveryPersonnelStore } from '@/store/deliveryPersonnelStore';
 import Button from '@/components/Button';
 import OrderTracker from '@/components/OrderTracker';
+import Colors from '@/constants/Colors';
 
 export default function AdminOrderDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TextInput, Pressable, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Home, Building2 } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { useUserStore } from '@/store/userStore';
 import Button from '@/components/Button';
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { ChevronRight, Filter } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { useOrderStore } from '@/store/orderStore';
 import { Order } from '@/types';
 

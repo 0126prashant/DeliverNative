@@ -4,7 +4,7 @@ import { useRouter, Stack } from 'expo-router';
 import { MapPin, Navigation, ChevronRight } from 'lucide-react-native';
 import * as Location from 'expo-location';
 import { Platform } from 'react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import Button from '@/components/Button';
 import { useUserStore } from '@/store/userStore';
 
