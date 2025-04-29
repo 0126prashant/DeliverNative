@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Alert } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { Lock } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import Button from '@/components/Button';
 import { useAdminStore } from '@/store/adminStore';
 

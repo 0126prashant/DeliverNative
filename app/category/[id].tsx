@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
-import Colors from '@/constants/colors';
-import { categories, products } from '@/mocks/products';
+import Colors from '@/constants/Colors';
+import { categories, products } from '@/mocks/product';
 import ProductCard from '@/components/ProductCard';
 
 export default function CategoryScreen() {

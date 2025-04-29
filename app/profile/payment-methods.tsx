@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Pressable } from 'react-native';
 import { Stack } from 'expo-router';
 import { CreditCard, Smartphone, DollarSign } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 
 export default function PaymentMethodsScreen() {
   return (

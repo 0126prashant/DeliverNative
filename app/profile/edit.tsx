@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Alert } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { useUserStore } from '@/store/userStore';
 import Button from '@/components/Button';
 

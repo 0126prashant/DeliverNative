@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { Stack } from 'expo-router';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { useOrderStore } from '@/store/orderStore';
 import OrderCard from '@/components/OrderCard';
 

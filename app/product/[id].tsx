@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, ScrollView, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { Star, MinusCircle, PlusCircle } from 'lucide-react-native';
-import Colors from '@/constants/colors';
-import { products } from '@/mocks/products';
+import Colors from '@/constants/Colors';
+import { products } from '@/mocks/product';
 import { useCartStore } from '@/store/cartStore';
 import Button from '@/components/Button';
 

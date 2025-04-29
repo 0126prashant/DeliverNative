@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { Home, Search, ShoppingCart, User } from "lucide-react-native";
-import Colors from "@/constants/colors";
+import Colors from "@/constants/Colors";
 import { useCartStore } from "@/store/cartStore";
 import { View, Text, StyleSheet } from "react-native";
 

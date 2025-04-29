@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Plus } from 'lucide-react-native';
-import Colors from '@/constants/colors';
+import Colors from '@/constants/Colors';
 import { useUserStore } from '@/store/userStore';
 import AddressCard from '@/components/AddressCard';
 import Button from '@/components/Button';
